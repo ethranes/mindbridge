@@ -131,6 +131,19 @@ export default function MatchPage() {
     setCurrentQuestion(0)
   }
 
+  const SPECIALTY_AVATAR: Record<string, { bg: string; ring: string }> = {
+    dr_sarah_heals:       { bg: 'bg-emerald-600', ring: 'ring-emerald-100' },
+    dr_james_grief:       { bg: 'bg-amber-500',   ring: 'ring-amber-100'  },
+    dr_rachel_cbt:        { bg: 'bg-violet-600',  ring: 'ring-violet-100' },
+    dr_priya_anxiety:     { bg: 'bg-sky-600',     ring: 'ring-sky-100'    },
+    dr_marcus_depression: { bg: 'bg-blue-600',    ring: 'ring-blue-100'   },
+    dr_olivia_relate:     { bg: 'bg-rose-500',    ring: 'ring-rose-100'   },
+    dr_viktor_psych:      { bg: 'bg-slate-700',   ring: 'ring-slate-200'  },
+  }
+
+  const getInitials = (name: string) =>
+    name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+
   const getMatchStrength = (score: number, index: number) => {
     if (index === 0) return { label: "Best Match", color: "bg-emerald-100 text-emerald-700 border-emerald-200", border: "border-emerald-300" }
     if (index === 1) return { label: "Strong Match", color: "bg-blue-100 text-blue-700 border-blue-200", border: "border-blue-200" }
@@ -156,7 +169,11 @@ export default function MatchPage() {
       <div className="min-h-screen bg-[#f0f4f8] py-12 px-4">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-10">
-            <div className="w-14 h-14 bg-sky-700 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">💙</div>
+            <div className="w-14 h-14 bg-sky-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </div>
             <h1 className="text-2xl font-bold text-slate-900 mb-2">Your Recommended Professionals</h1>
             <p className="text-slate-500 text-sm">Based on your answers, here are the specialists best suited to support you</p>
           </div>
@@ -179,8 +196,8 @@ export default function MatchPage() {
                       </div>
                       <p className="text-sm text-sky-700 font-medium">{pro.specialtyLabel}</p>
                     </div>
-                    <div className="w-12 h-12 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-xl">
-                      🧑‍⚕️
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-sm font-bold text-white ring-4 ${SPECIALTY_AVATAR[pro.username]?.bg ?? 'bg-sky-600'} ${SPECIALTY_AVATAR[pro.username]?.ring ?? 'ring-sky-100'}`}>
+                      {getInitials(pro.name)}
                     </div>
                   </div>
                   <p className="text-slate-500 text-sm mb-4 leading-relaxed">{pro.bio}</p>
