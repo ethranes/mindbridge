@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 
 interface Persona {
   id: string
@@ -13,14 +12,18 @@ interface Persona {
   avatarUrl: string | null
 }
 
-const SPECIALTY_META: Record<string, { label: string; icon: string; color: string }> = {
-  dr_sarah_heals:       { label: "Trauma Counsellor",        icon: "🌱", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  dr_james_grief:       { label: "Grief Counsellor",         icon: "🕊️", color: "bg-amber-50 text-amber-700 border-amber-200" },
-  dr_rachel_cbt:        { label: "CBT Therapist",            icon: "🧠", color: "bg-violet-50 text-violet-700 border-violet-200" },
-  dr_priya_anxiety:     { label: "Anxiety & Stress",         icon: "🌊", color: "bg-sky-50 text-sky-700 border-sky-200" },
-  dr_marcus_depression: { label: "Depression Specialist",    icon: "🌤️", color: "bg-blue-50 text-blue-700 border-blue-200" },
-  dr_olivia_relate:     { label: "Relationship Therapist",   icon: "💬", color: "bg-rose-50 text-rose-700 border-rose-200" },
-  dr_viktor_psych:      { label: "Psychoanalyst",             icon: "🛋️", color: "bg-slate-50 text-slate-700 border-slate-300" },
+const SPECIALTY_META: Record<string, { label: string; bg: string; text: string; ring: string; badge: string }> = {
+  dr_sarah_heals:       { label: "Trauma Counsellor",        bg: "bg-emerald-600", text: "text-white", ring: "ring-emerald-100", badge: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+  dr_james_grief:       { label: "Grief Counsellor",         bg: "bg-amber-500",   text: "text-white", ring: "ring-amber-100",   badge: "bg-amber-50 text-amber-700 border-amber-200" },
+  dr_rachel_cbt:        { label: "CBT Therapist",            bg: "bg-violet-600",  text: "text-white", ring: "ring-violet-100",  badge: "bg-violet-50 text-violet-700 border-violet-200" },
+  dr_priya_anxiety:     { label: "Anxiety & Stress",         bg: "bg-sky-600",     text: "text-white", ring: "ring-sky-100",     badge: "bg-sky-50 text-sky-700 border-sky-200" },
+  dr_marcus_depression: { label: "Depression Specialist",    bg: "bg-blue-600",    text: "text-white", ring: "ring-blue-100",    badge: "bg-blue-50 text-blue-700 border-blue-200" },
+  dr_olivia_relate:     { label: "Relationship Therapist",   bg: "bg-rose-500",    text: "text-white", ring: "ring-rose-100",    badge: "bg-rose-50 text-rose-700 border-rose-200" },
+  dr_viktor_psych:      { label: "Psychoanalyst",            bg: "bg-slate-700",   text: "text-white", ring: "ring-slate-200",   badge: "bg-slate-100 text-slate-700 border-slate-300" },
+}
+
+function initials(name: string) {
+  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 }
 
 export default function MessagesPage() {
@@ -62,7 +65,6 @@ export default function MessagesPage() {
 
   if (!session) return null
 
-  // Split into mental health professionals and general personas
   const therapists = personas.filter(p => SPECIALTY_META[p.username])
   const others = personas.filter(p => !SPECIALTY_META[p.username])
 
@@ -114,19 +116,22 @@ export default function MessagesPage() {
                   <button
                     key={persona.id}
                     onClick={() => router.push(`/messages/${persona.id}`)}
-                    className="bg-white border border-slate-200 rounded-2xl p-5 hover:border-sky-300 hover:shadow-sm transition-all text-left flex items-start gap-4"
+                    className="bg-white border border-slate-200 rounded-2xl p-5 hover:border-sky-300 hover:shadow-sm transition-all text-left flex items-start gap-4 group"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-2xl flex-shrink-0">
-                      {meta.icon}
+                    {/* Initial avatar */}
+                    <div className={`w-12 h-12 rounded-xl ${meta.bg} ${meta.text} flex items-center justify-center text-sm font-bold flex-shrink-0 ring-4 ${meta.ring}`}>
+                      {initials(persona.name)}
                     </div>
+
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <h3 className="font-semibold text-slate-900 text-sm">{persona.name}</h3>
-                        <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${meta.color}`}>{meta.label}</span>
+                        <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${meta.badge}`}>{meta.label}</span>
                       </div>
-                      <p className="text-xs text-slate-500 line-clamp-2">{persona.bio}</p>
+                      <p className="text-xs text-slate-500 leading-relaxed line-clamp-3">{persona.bio}</p>
                     </div>
-                    <svg className="w-4 h-4 text-slate-300 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <svg className="w-4 h-4 text-slate-300 group-hover:text-slate-400 flex-shrink-0 mt-1 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </button>

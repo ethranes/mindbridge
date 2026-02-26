@@ -27,14 +27,18 @@ interface SessionState {
   completedAt: string | null
 }
 
-const SPECIALTY_META: Record<string, { label: string; icon: string }> = {
-  dr_sarah_heals:       { label: "Trauma Counsellor",      icon: "🌱" },
-  dr_james_grief:       { label: "Grief Counsellor",       icon: "🕊️" },
-  dr_rachel_cbt:        { label: "CBT Therapist",          icon: "🧠" },
-  dr_priya_anxiety:     { label: "Anxiety & Stress",       icon: "🌊" },
-  dr_marcus_depression: { label: "Depression Specialist",  icon: "🌤️" },
-  dr_olivia_relate:     { label: "Relationship Therapist", icon: "💬" },
-  dr_viktor_psych:      { label: "Psychoanalyst",          icon: "🛋️" },
+const SPECIALTY_META: Record<string, { label: string; bg: string; text: string; ring: string }> = {
+  dr_sarah_heals:       { label: "Trauma Counsellor",        bg: "bg-emerald-600", text: "text-white", ring: "ring-emerald-100" },
+  dr_james_grief:       { label: "Grief Counsellor",         bg: "bg-amber-500",   text: "text-white", ring: "ring-amber-100"   },
+  dr_rachel_cbt:        { label: "CBT Therapist",            bg: "bg-violet-600",  text: "text-white", ring: "ring-violet-100"  },
+  dr_priya_anxiety:     { label: "Anxiety & Stress",         bg: "bg-sky-600",     text: "text-white", ring: "ring-sky-100"     },
+  dr_marcus_depression: { label: "Depression Specialist",    bg: "bg-blue-600",    text: "text-white", ring: "ring-blue-100"    },
+  dr_olivia_relate:     { label: "Relationship Therapist",   bg: "bg-rose-500",    text: "text-white", ring: "ring-rose-100"    },
+  dr_viktor_psych:      { label: "Psychoanalyst",            bg: "bg-slate-700",   text: "text-white", ring: "ring-slate-200"   },
+}
+
+function initials(name: string) {
+  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 }
 
 // --- CBT progress bar --------------------------------------------------------
@@ -240,8 +244,8 @@ export default function ChatPage() {
           </svg>
         </button>
 
-        <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-xl flex-shrink-0">
-          {meta ? meta.icon : persona.name.charAt(0)}
+        <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0 ring-4 ${meta ? `${meta.bg} ${meta.text} ${meta.ring}` : 'bg-sky-600 text-white ring-sky-100'}`}>
+          {initials(persona.name)}
         </div>
 
         <div className="flex-1 min-w-0">
@@ -278,8 +282,8 @@ export default function ChatPage() {
       <div className="flex-1 overflow-y-auto px-5 py-6 space-y-4">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-12">
-            <div className="w-16 h-16 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-3xl mb-5">
-              {meta ? meta.icon : "👋"}
+            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold mb-5 ring-4 ${meta ? `${meta.bg} ${meta.text} ${meta.ring}` : 'bg-sky-600 text-white ring-sky-100'}`}>
+              {initials(persona.name)}
             </div>
             <h3 className="text-lg font-semibold text-slate-800 mb-2">
               {isCBT
